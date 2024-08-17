@@ -23,7 +23,7 @@
     "require": {
         "php": ">=8.0.1",
         "laravel/framework": ">=9.19",
-        "jobmetric/laravel-package-core": "^1.7"
+        "jobmetric/laravel-package-core": "^1.12"
     },
     "autoload": {
         "files": [
@@ -34,11 +34,19 @@
             "JobMetric\\EventSystem\\Factories\\": "database/factories/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "JobMetric\\EventSystem\\Tests\\": "tests/"
+        }
+    },
     "extra": {
         "laravel": {
             "providers": [
                 "JobMetric\\EventSystem\\EventSystemServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "EventSystem": "JobMetric\\EventSystem\\Facades\\EventSystem"
+            }
         }
     },
     "minimum-stability": "stable",
