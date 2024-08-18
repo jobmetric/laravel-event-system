@@ -13,7 +13,8 @@ return [
     */
 
     "validation" => [
-        "errors" => "Validation errors occurred."
+        "errors" => "Validation errors occurred.",
+        "class_exist" => "The class ':class' does not exist.",
     ],
 
     "messages" => [
@@ -22,7 +23,8 @@ return [
     ],
 
     "exceptions" => [
-        "event_system_not_found" => "Event System with number :number not found."
+        "event_system_not_found" => "Event System with number :number not found.",
+        "class_not_found" => "The class :class not found.",
     ],
 
 ];
