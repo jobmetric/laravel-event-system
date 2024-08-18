@@ -4,6 +4,7 @@ namespace JobMetric\EventSystem\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use JobMetric\EventSystem\Rules\ClassExistRule;
 
 class StoreEventSystemRequest extends FormRequest
 {
@@ -23,10 +24,18 @@ class StoreEventSystemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
+            'name' => 'required|string|max:255|unique:events,name',
             'description' => 'string|nullable',
-            'event' => 'required|string',
-            'listener' => 'required|string',
+            'event' => [
+                'required',
+                'string',
+                new ClassExistRule
+            ],
+            'listener' => [
+                'required',
+                'string',
+                new ClassExistRule
+            ],
             'status' => 'boolean|nullable'
         ];
     }
