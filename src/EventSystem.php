@@ -125,6 +125,8 @@ class EventSystem
             $event->status = $data['status'] ?? true;
             $event->save();
 
+            cache()->forget('events');
+
             event(new EventSystemStoreEvent($event, $data));
 
             return [
@@ -161,6 +163,8 @@ class EventSystem
             $data = EventSystemResource::make($event);
 
             $event->delete();
+
+            cache()->forget('events');
 
             return [
                 'ok' => true,
