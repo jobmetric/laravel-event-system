@@ -19,6 +19,7 @@ return [
 
     "messages" => [
         "created" => "Event System created successfully.",
+        "updated" => "Event System updated successfully.",
         "deleted" => "Event System deleted successfully.",
     ],
 

@@ -174,4 +174,38 @@ class EventSystem
             ];
         });
     }
+
+    /**
+     * Toggle status the specified event system.
+     *
+     * @param int $event_system_id
+     *
+     * @return array
+     * @throws Throwable
+     */
+    public function toggleStatus(int $event_system_id): array
+    {
+        return DB::transaction(function () use ($event_system_id) {
+            /**
+             * @var Event $event
+             */
+            $event = Event::find($event_system_id);
+
+            if (!$event) {
+                throw new EventSystemNotFoundException($event_system_id);
+            }
+
+            $event->status = !$event->status;
+            $event->save();
+
+            cache()->forget('events');
+
+            return [
+                'ok' => true,
+                'data' => EventSystemResource::make($event),
+                'message' => trans('event-system::base.messages.updated'),
+                'status' => 200
+            ];
+        });
+    }
 }

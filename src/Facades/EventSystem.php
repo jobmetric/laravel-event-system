@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Illuminate\Http\Resources\Json\AnonymousResourceCollection all(array $filter = [])
  * @method static array store(array $data)
  * @method static array delete(int $event_system_id)
+ * @method static array toggleStatus(int $event_system_id)
  *
  * @see \JobMetric\EventSystem\EventSystem
  */
