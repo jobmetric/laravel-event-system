@@ -38,13 +38,13 @@ if (!function_exists('deleteEventSystem')) {
     /**
      * Delete the event system
      *
-     * @param int $event_system_id
+     * @param string $event_name
      *
      * @return array
      * @throws Throwable
      */
-    function deleteEventSystem(int $event_system_id): array
+    function deleteEventSystem(string $event_name): array
     {
-        return EventSystem::delete($event_system_id);
+        return EventSystem::delete($event_name);
     }
 }

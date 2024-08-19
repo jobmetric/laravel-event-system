@@ -2,6 +2,7 @@
 
 namespace JobMetric\EventSystem\Tests;
 
+use JobMetric\EventSystem\Exceptions\EventSystemByNameNotFoundException;
 use JobMetric\EventSystem\Exceptions\EventSystemNotFoundException;
 use JobMetric\EventSystem\Facades\EventSystem;
 use JobMetric\EventSystem\Http\Resources\EventSystemResource;
@@ -59,7 +60,7 @@ class EventSystemTest extends BaseTestCase
         ]);
 
         // Delete the event system
-        $deleteEventSystem = EventSystem::delete($storeEventSystem['data']->id);
+        $deleteEventSystem = EventSystem::delete('Event System Name');
 
         $this->assertIsArray($deleteEventSystem);
         $this->assertEquals($deleteEventSystem['message'], trans('event-system::base.messages.deleted'));
@@ -72,11 +73,11 @@ class EventSystemTest extends BaseTestCase
 
         // Delete the event system again
         try {
-            $deleteEventSystem = EventSystem::delete($storeEventSystem['data']->id);
+            $deleteEventSystem = EventSystem::delete('Event System Name');
 
             $this->assertIsArray($deleteEventSystem);
         } catch (Throwable $e) {
-            $this->assertInstanceOf(EventSystemNotFoundException::class, $e);
+            $this->assertInstanceOf(EventSystemByNameNotFoundException::class, $e);
         }
     }
 

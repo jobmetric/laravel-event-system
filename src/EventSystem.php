@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use JobMetric\EventSystem\Events\EventSystemDeleteEvent;
 use JobMetric\EventSystem\Events\EventSystemStoreEvent;
+use JobMetric\EventSystem\Exceptions\EventSystemByNameNotFoundException;
 use JobMetric\EventSystem\Exceptions\EventSystemNotFoundException;
 use JobMetric\EventSystem\Http\Requests\StoreEventSystemRequest;
 use JobMetric\EventSystem\Http\Resources\EventSystemResource;
@@ -141,21 +142,21 @@ class EventSystem
     /**
      * Delete the specified event system.
      *
-     * @param int $event_system_id
+     * @param string $event_name
      *
      * @return array
      * @throws Throwable
      */
-    public function delete(int $event_system_id): array
+    public function delete(string $event_name): array
     {
-        return DB::transaction(function () use ($event_system_id) {
+        return DB::transaction(function () use ($event_name) {
             /**
              * @var Event $event
              */
-            $event = Event::find($event_system_id);
+            $event = Event::query()->where('name', $event_name)->first();
 
             if (!$event) {
-                throw new EventSystemNotFoundException($event_system_id);
+                throw new EventSystemByNameNotFoundException($event_name);
             }
 
             event(new EventSystemDeleteEvent($event));
