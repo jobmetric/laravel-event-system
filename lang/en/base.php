@@ -13,7 +13,6 @@ return [
     */
 
     "validation" => [
-        "errors" => "Validation errors occurred.",
         "class_exist" => "The class ':class' does not exist.",
     ],
 
