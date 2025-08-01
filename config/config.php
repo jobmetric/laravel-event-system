@@ -15,7 +15,7 @@ return [
     | - unit: minutes
     */
 
-    "cache_time" => env("EVENT_SYSTEM_CHAT_CACHE_TIME", 0),
+    "cache_time" => env("EVENT_SYSTEM_CACHE_TIME"),
 
     /*
     |--------------------------------------------------------------------------
