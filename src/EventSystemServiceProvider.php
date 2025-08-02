@@ -23,6 +23,7 @@ class EventSystemServiceProvider extends PackageCoreServiceProvider
             ->hasConfig()
             ->hasMigration()
             ->hasTranslation()
+            ->registerClass('EventSystem', EventSystem::class, RegisterClassTypeEnum::SINGLETON())
             ->registerClass('event', EventServiceProvider::class, RegisterClassTypeEnum::REGISTER());
     }
 }
