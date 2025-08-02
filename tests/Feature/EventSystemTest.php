@@ -1,12 +1,13 @@
 <?php
 
-namespace JobMetric\EventSystem\Tests;
+namespace JobMetric\EventSystem\Tests\Feature;
 
 use JobMetric\EventSystem\Exceptions\EventSystemByNameNotFoundException;
-use JobMetric\EventSystem\Exceptions\EventSystemNotFoundException;
 use JobMetric\EventSystem\Facades\EventSystem;
 use JobMetric\EventSystem\Http\Resources\EventSystemResource;
-use Tests\BaseDatabaseTestCase as BaseTestCase;
+use JobMetric\EventSystem\Tests\Stubs;
+use JobMetric\EventSystem\Tests\TestCase as BaseTestCase;
+use JobMetric\PackageCore\Output\Response;
 use Throwable;
 
 class EventSystemTest extends BaseTestCase
@@ -16,30 +17,43 @@ class EventSystemTest extends BaseTestCase
      */
     public function test_store()
     {
-        $eventClass = \JobMetric\EventSystem\Tests\EventExample::class;
-        $listenerClass = \JobMetric\EventSystem\Tests\ListenerExample::class;
+        $eventClass = Stubs\Events\EventExample::class;
+        $listenerClass = Stubs\Listeners\ListenerExample::class;
 
         // Store an event system
         $storeEventSystem = EventSystem::store([
             'name' => 'Event System Name',
             'description' => 'The event system is a system that allows you to create events and listeners.',
             'event' => $eventClass,
-            'listener' => $listenerClass,
-            'status' => true,
+            'listener' => $listenerClass
         ]);
 
-        $this->assertIsArray($storeEventSystem);
-        $this->assertEquals($storeEventSystem['message'], trans('event-system::base.messages.created'));
-        $this->assertInstanceOf(EventSystemResource::class, $storeEventSystem['data']);
-        $this->assertEquals(201, $storeEventSystem['status']);
+        $this->assertInstanceOf(Response::class, $storeEventSystem);
+        $this->assertTrue($storeEventSystem->ok);
+        $this->assertEquals($storeEventSystem->message, trans('event-system::base.messages.created'));
+        $this->assertInstanceOf(EventSystemResource::class, $storeEventSystem->data);
+        $this->assertEquals(201, $storeEventSystem->status);
 
         $this->assertDatabaseHas('events', [
             'name' => 'Event System Name',
             'description' => 'The event system is a system that allows you to create events and listeners.',
             'event' => $eventClass,
             'listener' => $listenerClass,
-            'status' => true,
+            'priority' => 0,
+            'status' => true
         ]);
+
+        // Store the same event system again
+        try {
+            $storeEventSystem = EventSystem::store([
+                'name' => 'Event System Name Duplicate',
+                'description' => 'The event system is a system that allows you to create events and listeners.',
+                'event' => $eventClass,
+                'listener' => $listenerClass,
+            ]);
+        } catch (Throwable $e) {
+            $this->assertInstanceOf(\Illuminate\Database\UniqueConstraintViolationException::class, $e);
+        }
     }
 
     /**
@@ -47,28 +61,28 @@ class EventSystemTest extends BaseTestCase
      */
     public function test_delete()
     {
-        $eventClass = \JobMetric\EventSystem\Tests\EventExample::class;
-        $listenerClass = \JobMetric\EventSystem\Tests\ListenerExample::class;
+        $eventClass = Stubs\Events\EventExample::class;
+        $listenerClass = Stubs\Listeners\ListenerExample::class;
 
         // Store an event system
         $storeEventSystem = EventSystem::store([
             'name' => 'Event System Name',
             'description' => 'The event system is a system that allows you to create events and listeners.',
             'event' => $eventClass,
-            'listener' => $listenerClass,
-            'status' => true,
+            'listener' => $listenerClass
         ]);
 
         // Delete the event system
         $deleteEventSystem = EventSystem::delete('Event System Name');
 
-        $this->assertIsArray($deleteEventSystem);
-        $this->assertEquals($deleteEventSystem['message'], trans('event-system::base.messages.deleted'));
-        $this->assertInstanceOf(EventSystemResource::class, $deleteEventSystem['data']);
-        $this->assertEquals(200, $deleteEventSystem['status']);
+        $this->assertInstanceOf(Response::class, $deleteEventSystem);
+        $this->assertTrue($deleteEventSystem->ok);
+        $this->assertEquals($deleteEventSystem->message, trans('event-system::base.messages.deleted'));
+        $this->assertInstanceOf(EventSystemResource::class, $deleteEventSystem->data);
+        $this->assertEquals(200, $deleteEventSystem->status);
 
         $this->assertDatabaseMissing('events', [
-            'id' => $storeEventSystem['data']->id,
+            'id' => $storeEventSystem->data->id,
         ]);
 
         // Delete the event system again
@@ -86,28 +100,28 @@ class EventSystemTest extends BaseTestCase
      */
     public function test_toggle_status()
     {
-        $eventClass = \JobMetric\EventSystem\Tests\EventExample::class;
-        $listenerClass = \JobMetric\EventSystem\Tests\ListenerExample::class;
+        $eventClass = Stubs\Events\EventExample::class;
+        $listenerClass = Stubs\Listeners\ListenerExample::class;
 
         // Store an event system
         $storeEventSystem = EventSystem::store([
             'name' => 'Event System Name',
             'description' => 'The event system is a system that allows you to create events and listeners.',
             'event' => $eventClass,
-            'listener' => $listenerClass,
-            'status' => true,
+            'listener' => $listenerClass
         ]);
 
         // Toggle the status of the event system
-        $toggleStatusEventSystem = EventSystem::toggleStatus($storeEventSystem['data']->id);
+        $toggleStatusEventSystem = EventSystem::toggleStatus($storeEventSystem->data->id);
 
-        $this->assertIsArray($toggleStatusEventSystem);
-        $this->assertEquals($toggleStatusEventSystem['message'], trans('event-system::base.messages.updated'));
-        $this->assertInstanceOf(EventSystemResource::class, $toggleStatusEventSystem['data']);
-        $this->assertEquals(200, $toggleStatusEventSystem['status']);
+        $this->assertInstanceOf(Response::class, $toggleStatusEventSystem);
+        $this->assertTrue($toggleStatusEventSystem->ok);
+        $this->assertEquals($toggleStatusEventSystem->message, trans('event-system::base.messages.change_status'));
+        $this->assertInstanceOf(EventSystemResource::class, $toggleStatusEventSystem->data);
+        $this->assertEquals(200, $toggleStatusEventSystem->status);
 
         $this->assertDatabaseHas('events', [
-            'id' => $storeEventSystem['data']->id,
+            'id' => $storeEventSystem->data->id,
             'status' => false,
         ]);
     }
@@ -117,16 +131,15 @@ class EventSystemTest extends BaseTestCase
      */
     public function test_all()
     {
-        $eventClass = \JobMetric\EventSystem\Tests\EventExample::class;
-        $listenerClass = \JobMetric\EventSystem\Tests\ListenerExample::class;
+        $eventClass = Stubs\Events\EventExample::class;
+        $listenerClass = Stubs\Listeners\ListenerExample::class;
 
         // Store an event system
         EventSystem::store([
             'name' => 'Event System Name',
             'description' => 'The event system is a system that allows you to create events and listeners.',
             'event' => $eventClass,
-            'listener' => $listenerClass,
-            'status' => true,
+            'listener' => $listenerClass
         ]);
 
         // Get the event systems
@@ -144,16 +157,15 @@ class EventSystemTest extends BaseTestCase
      */
     public function test_pagination()
     {
-        $eventClass = \JobMetric\EventSystem\Tests\EventExample::class;
-        $listenerClass = \JobMetric\EventSystem\Tests\ListenerExample::class;
+        $eventClass = Stubs\Events\EventExample::class;
+        $listenerClass = Stubs\Listeners\ListenerExample::class;
 
         // Store an event system
         EventSystem::store([
             'name' => 'Event System Name',
             'description' => 'The event system is a system that allows you to create events and listeners.',
             'event' => $eventClass,
-            'listener' => $listenerClass,
-            'status' => true,
+            'listener' => $listenerClass
         ]);
 
         // Paginate the event systems
