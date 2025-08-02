@@ -18,13 +18,13 @@ return [
 
     "messages" => [
         "created" => "Event System created successfully.",
-        "updated" => "Event System updated successfully.",
         "deleted" => "Event System deleted successfully.",
+        "change_status" => "Event System status changed successfully.",
     ],
 
     "exceptions" => [
+        "event_system_by_name_not_found" => "Event System with name :name not found.",
         "event_system_not_found" => "Event System with number :number not found.",
-        "class_not_found" => "The class :class not found.",
     ],
 
 ];
