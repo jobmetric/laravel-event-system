@@ -47,7 +47,7 @@ return new class extends Migration {
 
             $table->boolean('status')->default(true)->index();
 
-            $table->dateTime('created_at')->useCurrent();
+            $table->timestamps();
 
             $table->unique([
                 'event',
