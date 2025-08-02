@@ -1,6 +1,6 @@
 <?php
 
-namespace JobMetric\Unit\Factories;
+namespace JobMetric\EventSystem\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use JobMetric\EventSystem\Models\Event;
@@ -22,8 +22,9 @@ class EventFactory extends Factory
         return [
             'name' => $this->faker->unique()->word,
             'description' => $this->faker->sentence,
-            'event' => $this->faker->word,
-            'listener' => $this->faker->word,
+            'event' => null,
+            'listener' => null,
+            'priority' => $this->faker->numberBetween(0, 100),
             'status' => $this->faker->boolean,
         ];
     }
@@ -81,6 +82,20 @@ class EventFactory extends Factory
     {
         return $this->state(fn(array $attributes) => [
             'listener' => $listener
+        ]);
+    }
+
+    /**
+     * set priority
+     *
+     * @param int $priority
+     *
+     * @return static
+     */
+    public function setPriority(int $priority): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'priority' => $priority
         ]);
     }
 
