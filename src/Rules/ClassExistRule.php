@@ -16,7 +16,7 @@ class ClassExistRule implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (!class_exists($value)) {
-            $fail(__('event-system::base.validation.class_exist', [
+            $fail(trans('event-system::base.validation.class_exist', [
                 'class' => $value
             ]));
         }
