@@ -1,49 +1,50 @@
 <?php
 
-use JobMetric\EventSystem\Exceptions\ClassNotFoundException;
 use JobMetric\EventSystem\Facades\EventSystem;
+use JobMetric\PackageCore\Output\Response;
 
 if (!function_exists('addEventSystem')) {
     /**
-     * Add the event system
+     * Register a new event system entry.
      *
-     * @param string $name
-     * @param string $event
-     * @param string $listener
-     * @param string|null $description
+     * This function creates and stores an event-listener mapping in the event system with a given priority and status.
+     * It's useful when dynamically registering event handlers, especially in modular or plugin-based systems.
      *
-     * @return array
+     * @param string $event_name The name/label of the event system entry (used as a unique identifier).
+     * @param string $event The fully qualified class name of the event.
+     * @param string $listener The fully qualified class name of the listener that handles the event.
+     * @param int $priority The execution priority of the listener. Lower values are executed earlier.
+     * @param string|null $description Optional description for documentation or management purposes.
+     * @param bool $status Indicates whether the event system entry is active or not.
+     *
+     * @return Response
      * @throws Throwable
      */
-    function addEventSystem(string $name, string $event, string $listener, string $description = null): array
+    function addEventSystem(string $event_name, string $event, string $listener, int $priority = 0, string $description = null, bool $status = true): Response
     {
-        if (!class_exists($event)) {
-            throw new ClassNotFoundException($event);
-        }
-
-        if (!class_exists($listener)) {
-            throw new ClassNotFoundException($listener);
-        }
-
         return EventSystem::store([
-            'name' => $name,
+            'name' => $event_name,
+            'description' => $description,
             'event' => $event,
             'listener' => $listener,
-            'description' => $description
+            'priority' => $priority,
+            'status' => $status,
         ]);
     }
 }
 
 if (!function_exists('deleteEventSystem')) {
     /**
-     * Delete the event system
+     * Delete an event system entry by its name.
      *
-     * @param string $event_name
+     * This function removes an event system record identified by its unique name. Useful for unbinding dynamically added listeners.
      *
-     * @return array
+     * @param string $event_name The name of the event system entry to be deleted.
+     *
+     * @return Response
      * @throws Throwable
      */
-    function deleteEventSystem(string $event_name): array
+    function deleteEventSystem(string $event_name): Response
     {
         return EventSystem::delete($event_name);
     }
