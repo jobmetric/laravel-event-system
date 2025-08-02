@@ -4,7 +4,7 @@ namespace JobMetric\EventSystem\Events;
 
 use JobMetric\EventSystem\Models\Event;
 
-class EventSystemStoreEvent
+class EventSystemStoredEvent
 {
     /**
      * Create a new event instance.
