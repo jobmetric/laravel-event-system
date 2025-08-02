@@ -28,6 +28,7 @@ use JobMetric\PackageCore\Models\HasBooleanStatus;
  * @property int $priority Execution order of the listener (higher priority runs later).
  * @property bool $status Whether the listener is active (true) or disabled (false).
  * @property Carbon $created_at Timestamp when this binding was created.
+ * @property Carbon $updated_at Timestamp when this binding was last updated.
  *
  * @method static Builder|Event whereName(string $name)
  * @method static Builder|Event whereDescription(string $description)
@@ -39,8 +40,6 @@ use JobMetric\PackageCore\Models\HasBooleanStatus;
 class Event extends Model
 {
     use HasFactory, HasBooleanStatus;
-
-    const UPDATED_AT = null;
 
     /**
      * The attributes that are mass assignable.
