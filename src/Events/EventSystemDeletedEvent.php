@@ -4,7 +4,7 @@ namespace JobMetric\EventSystem\Events;
 
 use JobMetric\EventSystem\Models\Event;
 
-class EventSystemDeleteEvent
+class EventSystemDeletedEvent
 {
     /**
      * Create a new event instance.
