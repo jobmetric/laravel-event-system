@@ -36,6 +36,7 @@ class StoreEventSystemRequest extends FormRequest
                 'string',
                 new ClassExistRule
             ],
+            'priority' => 'integer|nullable',
             'status' => 'boolean|nullable'
         ];
     }
@@ -48,7 +49,8 @@ class StoreEventSystemRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $this->merge([
-            'status' => $this->status ?? true
+            'status' => $this->status ?? true,
+            'priority' => $this->priority ?? 0,
         ]);
     }
 }
