@@ -16,14 +16,24 @@ class EventServiceProvider extends ServiceProvider
     public function listens(): array
     {
         if (Schema::hasTable(config('event-system.tables.event'))) {
-            return cache()->remember('events', config('event-system.cache_time'), function () {
-                $events = Event::active()->get();
+            $cacheKey = config('event-system.cache_key', 'event-system:listens:' . app()->environment());
+
+            return cache()->remember($cacheKey, config('event-system.cache_time'), function () {
+                $events = Event::active()->orderBy('priority')->get();
 
                 $data = [];
                 foreach ($events as $event) {
-                    if (class_exists($event->event) && class_exists($event->listener)) {
-                        $data[$event->event][] = $event->listener;
+                    if (!class_exists($event->event)) {
+                        logger()->warning("Event class '{$event->event}' does not exist.");
+                        continue;
                     }
+
+                    if (!class_exists($event->listener)) {
+                        logger()->warning("Listener class '{$event->listener}' does not exist.");
+                        continue;
+                    }
+
+                    $data[$event->event][] = $event->listener;
                 }
 
                 return $data;
