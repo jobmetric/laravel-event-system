@@ -15,58 +15,72 @@
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
-# Event System for laravel
+# Laravel Event System
 
-The EventSystem package provides an easy-to-use system for managing custom events and their listeners in Laravel. It allows you to  manage the status of events within your application. This package is highly flexible and integrates seamlessly with Laravel's built-in event system.
+**Laravel Event System** is a flexible and elegant package designed to simplify dynamic event management. It provides a layer on top of Laravel’s native event system, allowing for the registration and removal of events at runtime — perfect for modular applications and plugin-based systems.
 
-## Install via composer
+## 📦 Installation
 
-Run the following command to pull in the latest version:
+Install the package via Composer:
 
 ```bash
 composer require jobmetric/laravel-event-system
 ```
 
-## Documentation
-
->#### Before doing anything, you must migrate after installing the package by composer.
+Then publish the migration and run it:
 
 ```bash
 php artisan migrate
 ```
 
-## How is it used?
+## ⚙️ Configuration
 
-Some programs need to add listeners to the system when they are installed, and these listeners are lost when they are removed. Using the following methods, we can add and subtract these tasks in the system.
+The default configuration can be published using:
 
-### Add Event
-
-```php
-addEventSystem('event name', event_class::class, listener_class::class, 'optional description');
+```bash
+php artisan vendor:publish --tag=event-system-config
 ```
 
-> The `event name` is the name of the event that you want to add to the system and must be unique.
-> 
-> The `event_class` and `listener_class` must be the full path of the class.
-> 
-> The `optional description` is optional and is used to describe the event.
-
-### Remove Event
+### Config Options
 
 ```php
-removeEventSystem('event name');
+return [
+
+    "cache_time" => env("EVENT_SYSTEM_CACHE_TIME", 60),
+
+    "cache_key" => env("EVENT_SYSTEM_CACHE_KEY", "event_system_cache"),
+
+    "tables" => [
+        'event' => 'events',
+    ],
+];
 ```
 
-> The `event name` is the name of the event that you want to remove from the system.
+## 🚀 Usage
 
-## Events
+You can dynamically register or remove events at runtime using the helper functions:
 
-This package contains several events for which you can write a listener as follows
+### Register an Event
 
-| Event                    | Description                                           |
-|--------------------------|-------------------------------------------------------|
-| `EventSystemStoreEvent`  | This event is called after storing the event system.  |
-| `EventSystemDeleteEvent` | This event is called after deleting the event system. |
+```php
+addEventSystem('user.created', App\Events\UserCreated::class, App\Listeners\SendWelcomeEmail::class, 'Triggered when a new user registers');
+```
+
+### Remove an Event
+
+```php
+removeEventSystem('user.created');
+```
+
+## 🎧 System Events
+
+The package also emits its own events:
+
+| Event                      | Description                                   |
+|----------------------------|-----------------------------------------------|
+| `EventSystemStoreEvent`    | Dispatched after an event has been registered |
+| `EventSystemDeletingEvent` | Dispatched before an event is removed         |
+| `EventSystemDeletedEvent`  | Dispatched after an event has been removed    |
 
 ## Contributing
 
