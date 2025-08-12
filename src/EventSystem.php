@@ -2,7 +2,8 @@
 
 namespace JobMetric\EventSystem;
 
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use JobMetric\EventSystem\Events\EventSystemDeletedEvent;
@@ -71,13 +72,11 @@ class EventSystem
      * @param array $filter Optional filters to apply (e.g., ['status' => true]).
      * @param int $page_limit Number of records per page (default is 15).
      *
-     * @return AnonymousResourceCollection
+     * @return LengthAwarePaginator
      */
-    public function paginate(array $filter = [], int $page_limit = 15): AnonymousResourceCollection
+    public function paginate(array $filter = [], int $page_limit = 15): LengthAwarePaginator
     {
-        return EventSystemResource::collection(
-            $this->query($filter)->paginate($page_limit)
-        );
+        return $this->query($filter)->paginate($page_limit);
     }
 
     /**
@@ -85,13 +84,11 @@ class EventSystem
      *
      * @param array $filter Optional filters to apply.
      *
-     * @return AnonymousResourceCollection
+     * @return Collection
      */
-    public function all(array $filter = []): AnonymousResourceCollection
+    public function all(array $filter = []): Collection
     {
-        return EventSystemResource::collection(
-            $this->query($filter)->get()
-        );
+        return $this->query($filter)->get();
     }
 
     /**
