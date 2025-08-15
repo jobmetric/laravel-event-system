@@ -37,7 +37,7 @@ class StoreEventSystemRequest extends FormRequest
                 new ClassExistRule
             ],
             'priority' => 'integer|nullable',
-            'status' => 'boolean|nullable'
+            'status' => 'boolean'
         ];
     }
 
@@ -49,7 +49,6 @@ class StoreEventSystemRequest extends FormRequest
      */
     public static function normalize(array $data): array
     {
-        $data['status'] = $data['status'] ?? true;
         $data['priority'] = $data['priority'] ?? 0;
 
         if (($data['description'] ?? null) === '') {
