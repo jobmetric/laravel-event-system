@@ -5,6 +5,7 @@ namespace JobMetric\EventSystem\Tests\Feature;
 use JobMetric\EventSystem\Exceptions\EventSystemByNameNotFoundException;
 use JobMetric\EventSystem\Facades\EventSystem;
 use JobMetric\EventSystem\Http\Resources\EventSystemResource;
+use JobMetric\EventSystem\Models\Event;
 use JobMetric\EventSystem\Tests\Stubs;
 use JobMetric\EventSystem\Tests\TestCase as BaseTestCase;
 use JobMetric\PackageCore\Output\Response;
@@ -148,7 +149,7 @@ class EventSystemTest extends BaseTestCase
         $this->assertCount(1, $getEventSystems);
 
         $getEventSystems->each(function ($eventSystem) {
-            $this->assertInstanceOf(EventSystemResource::class, $eventSystem);
+            $this->assertInstanceOf(Event::class, $eventSystem);
         });
     }
 
@@ -174,7 +175,7 @@ class EventSystemTest extends BaseTestCase
         $this->assertCount(1, $paginateEventSystems);
 
         $paginateEventSystems->each(function ($eventSystem) {
-            $this->assertInstanceOf(EventSystemResource::class, $eventSystem);
+            $this->assertInstanceOf(Event::class, $eventSystem);
         });
 
         $this->assertIsInt($paginateEventSystems->total());
