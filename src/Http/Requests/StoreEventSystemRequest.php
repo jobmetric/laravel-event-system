@@ -66,4 +66,21 @@ class StoreEventSystemRequest extends FormRequest
     {
         $this->merge(static::normalize($this->all()));
     }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array
+     */
+    public function attributes(): array
+    {
+        return [
+            'name' => trans('event-system::base.fields.name'),
+            'description' => trans('event-system::base.fields.description'),
+            'event' => trans('event-system::base.fields.event'),
+            'listener' => trans('event-system::base.fields.listener'),
+            'priority' => trans('event-system::base.fields.priority'),
+            'status' => trans('event-system::base.fields.status'),
+        ];
+    }
 }

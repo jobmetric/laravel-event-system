@@ -27,4 +27,13 @@ return [
         "event_system_not_found" => "Event System with number :number not found.",
     ],
 
+    "fields" => [
+        "name" => "Name",
+        "description" => "Description",
+        "event" => "Event",
+        "listener" => "Listener",
+        "priority" => "Priority",
+        "status" => "Status",
+    ],
+
 ];

@@ -27,4 +27,13 @@ return [
         "event_system_not_found" => "سیستم رویداد با شماره :number یافت نشد.",
     ],
 
+    "fields" => [
+        "name" => "نام",
+        "description" => "توضیحات",
+        "event" => "رویداد",
+        "listener" => "شنونده",
+        "priority" => "اولویت",
+        "status" => "وضعیت",
+    ],
+
 ];
