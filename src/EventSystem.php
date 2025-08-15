@@ -96,29 +96,25 @@ class EventSystem
      *
      * Dispatches EventSystemStoredEvent on success.
      *
-     * @param array $data Input data to validate and persist.
+     * @param array $input Input data to validate and persist.
      *
      * @return Response
      * @throws Throwable
      */
-    public function store(array $data): Response
+    public function store(array $input): Response
     {
-        $validator = Validator::make($data, (new StoreEventSystemRequest)->rules());
+        $validated = dto($input, StoreEventSystemRequest::class);
 
-        if ($validator->fails()) {
-            $errors = $validator->errors()->all();
-
-            return Response::make(false, trans('package-core::base.validation.errors'), status: 422, errors: $errors);
-        } else {
-            $data = $validator->validated();
+        if ($validated instanceof Response) {
+            return $validated;
         }
 
-        return DB::transaction(function () use ($data) {
-            $event = Event::create($data);
+        return DB::transaction(function () use ($validated) {
+            $event = Event::create($validated);
 
             $this->forgetCache();
 
-            event(new EventSystemStoredEvent($event, $data));
+            event(new EventSystemStoredEvent($event, $validated));
 
             return Response::make(true, trans('event-system::base.messages.created'), EventSystemResource::make($event), 201);
         });

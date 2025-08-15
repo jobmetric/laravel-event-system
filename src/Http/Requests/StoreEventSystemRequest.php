@@ -42,15 +42,28 @@ class StoreEventSystemRequest extends FormRequest
     }
 
     /**
-     * Prepare the data for validation.
+     * Normalize raw input when validating outside Laravel's FormRequest pipeline.
      *
-     * @return void
+     * @param array<string,mixed> $data
+     * @return array<string,mixed>
+     */
+    public static function normalize(array $data): array
+    {
+        $data['status'] = $data['status'] ?? true;
+        $data['priority'] = $data['priority'] ?? 0;
+
+        if (($data['description'] ?? null) === '') {
+            $data['description'] = null;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Laravel's native pipeline will still call this when using the FormRequest normally.
      */
     protected function prepareForValidation(): void
     {
-        $this->merge([
-            'status' => $this->status ?? true,
-            'priority' => $this->priority ?? 0,
-        ]);
+        $this->merge(static::normalize($this->all()));
     }
 }
