@@ -105,10 +105,6 @@ class EventSystem
     {
         $validated = dto($input, StoreEventSystemRequest::class);
 
-        if ($validated instanceof Response) {
-            return $validated;
-        }
-
         return DB::transaction(function () use ($validated) {
             $event = Event::create($validated);
 

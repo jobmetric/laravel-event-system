@@ -23,7 +23,7 @@
     "require": {
         "php": ">=8.1",
         "laravel/framework": ">=9.19",
-        "jobmetric/laravel-package-core": "^1.26"
+        "jobmetric/laravel-package-core": "^1.31"
     },
     "autoload": {
         "files": [
