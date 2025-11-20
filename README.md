@@ -72,6 +72,44 @@ addEventSystem('user.created', App\Events\UserCreated::class, App\Listeners\Send
 removeEventSystem('user.created');
 ```
 
+### Event Bus & Registry
+
+The package ships with a small registry and bus to dispatch domain events by stable keys instead of hard‑coding class names.
+
+```php
+use JobMetric\EventSystem\Contracts\DomainEvent;
+use JobMetric\EventSystem\Support\EventRegistry;
+use JobMetric\EventSystem\Facades\EventBus;
+
+class UserRegistered implements DomainEvent
+{
+    public function __construct(public int $userId) {}
+
+    public static function key(): string
+    {
+        return 'user.registered';
+    }
+}
+
+$registry = app(EventRegistry::class);
+$registry->register(UserRegistered::key(), UserRegistered::class);
+
+// Later: dispatch by the stable key (use helper below if you prefer)
+EventBus::dispatchByKey(UserRegistered::key(), 7);
+
+// Or dispatch a concrete event instance directly
+EventBus::dispatch(new UserRegistered(7));
+```
+
+- `EventRegistry::forKey($key)` resolves the event class for a key.
+- `EventRegistry::keyFor($event)` returns the key for a registered event class or instance.
+
+### Helper Functions
+
+- `addEventSystem($name, $event, $listener, $priority = 0, $description = null, $status = true)` registers an event/listener row.
+- `deleteEventSystem($name)` removes a row by name.
+- `eventKey($key, ...$payload)` dispatches an event via its registry key using `EventBus::dispatchByKey`. The helper forwards the payload as a single array argument to the event constructor, so shape your constructor accordingly (e.g. `__construct(array $data)`).
+
 ## 🎧 System Events
 
 The package also emits its own events:
