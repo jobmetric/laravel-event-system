@@ -2,6 +2,9 @@
 
 namespace JobMetric\EventSystem;
 
+use Illuminate\Contracts\Events\Dispatcher;
+use JobMetric\EventSystem\Support\EventBus;
+use JobMetric\EventSystem\Support\EventRegistry;
 use JobMetric\PackageCore\Enums\RegisterClassTypeEnum;
 use JobMetric\PackageCore\Exceptions\MigrationFolderNotFoundException;
 use JobMetric\PackageCore\Exceptions\RegisterClassTypeNotFoundException;
@@ -24,6 +27,10 @@ class EventSystemServiceProvider extends PackageCoreServiceProvider
             ->hasMigration()
             ->hasTranslation()
             ->registerClass('EventSystem', EventSystem::class, RegisterClassTypeEnum::SINGLETON())
-            ->registerClass('event', EventServiceProvider::class, RegisterClassTypeEnum::REGISTER());
+            ->registerClass('event', EventServiceProvider::class, RegisterClassTypeEnum::REGISTER())
+            ->registerClass('EventRegistry', EventRegistry::class, RegisterClassTypeEnum::SINGLETON())
+            ->registerClass('EventBus', function ($app) {
+                return new EventBus($app->make(Dispatcher::class), $app->make(EventRegistry::class));
+            }, RegisterClassTypeEnum::SINGLETON());
     }
 }
