@@ -33,13 +33,10 @@ readonly class EventSystemDeletedEvent implements DomainEvent
      */
     public static function definition(): DomainEventDefinition
     {
-        return new DomainEventDefinition(
-            key: self::key(),
-            group: trans('event-system::base.events.event_system_deleted.group'),
-            title: trans('event-system::base.events.event_system_deleted.title'),
-            description: trans('event-system::base.events.event_system_deleted.description'),
-            icon: 'fas fa-trash-alt',
-            tags: trans('event-system::base.events.event_system_deleted.tags')
-        );
+        return new DomainEventDefinition(self::key(), 'event-system::base.events.event_system_deleted.group', 'event-system::base.events.event_system_deleted.title', 'event-system::base.events.event_system_deleted.description', 'fas fa-trash-alt', [
+            'event system',
+            'storage',
+            'management',
+        ]);
     }
 }

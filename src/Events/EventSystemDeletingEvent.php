@@ -2,10 +2,11 @@
 
 namespace JobMetric\EventSystem\Events;
 
+use JobMetric\EventSystem\Contracts\DomainEvent;
 use JobMetric\EventSystem\Models\Event;
 use JobMetric\EventSystem\Support\DomainEventDefinition;
 
-readonly class EventSystemDeletingEvent
+readonly class EventSystemDeletingEvent implements DomainEvent
 {
     /**
      * Create a new event instance.
@@ -32,13 +33,10 @@ readonly class EventSystemDeletingEvent
      */
     public static function definition(): DomainEventDefinition
     {
-        return new DomainEventDefinition(
-            key: self::key(),
-            group: trans('event-system::base.events.event_system_deleting.group'),
-            title: trans('event-system::base.events.event_system_deleting.title'),
-            description: trans('event-system::base.events.event_system_deleting.description'),
-            icon: 'fas fa-trash-alt',
-            tags: trans('event-system::base.events.event_system_deleting.tags')
-        );
+        return new DomainEventDefinition(self::key(), 'event-system::base.events.event_system_deleting.group', 'event-system::base.events.event_system_deleting.title', 'event-system::base.events.event_system_deleting.description', 'fas fa-trash-alt', [
+            'event system',
+            'storage',
+            'management',
+        ]);
     }
 }

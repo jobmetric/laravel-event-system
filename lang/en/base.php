@@ -41,21 +41,18 @@ return [
             'group' => 'Event System',
             'title' => 'Event System Deleted',
             'description' => 'This event is triggered when an Event System is deleted.',
-            'tags' => ['event system', 'deletion', 'management'],
         ],
 
         'event_system_deleting' => [
             'group' => 'Event System',
             'title' => 'Event System Deleting',
             'description' => 'This event is triggered when an Event System is being deleted.',
-            'tags' => ['event system', 'deletion', 'management'],
         ],
 
         'event_system_stored' => [
             'group' => 'Event System',
             'title' => 'Event System Stored',
             'description' => 'This event is triggered when an Event System is stored.',
-            'tags' => ['event system', 'storage', 'management'],
         ],
     ],
 
