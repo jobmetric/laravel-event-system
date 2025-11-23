@@ -2,6 +2,7 @@
 
 namespace JobMetric\EventSystem;
 
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Events\Dispatcher;
 use JobMetric\EventSystem\Support\EventBus;
 use JobMetric\EventSystem\Support\EventRegistry;
@@ -32,5 +33,20 @@ class EventSystemServiceProvider extends PackageCoreServiceProvider
             ->registerClass('EventBus', function ($app) {
                 return new EventBus($app->make(Dispatcher::class), $app->make(EventRegistry::class));
             }, RegisterClassTypeEnum::SINGLETON());
+    }
+
+    /**
+     * after register package
+     *
+     * @return void
+     * @throws BindingResolutionException
+     */
+    public function afterRegisterPackage(): void
+    {
+        $registry = $this->app->make('EventRegistry');
+
+        $registry->register(new \JobMetric\EventSystem\Events\EventSystemDeletedEvent);
+        $registry->register(new \JobMetric\EventSystem\Events\EventSystemDeletingEvent);
+        $registry->register(new \JobMetric\EventSystem\Events\EventSystemStoredEvent);
     }
 }
