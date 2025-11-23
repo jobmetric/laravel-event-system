@@ -3,7 +3,6 @@
 namespace JobMetric\EventSystem\Support;
 
 use Illuminate\Contracts\Events\Dispatcher;
-use JobMetric\EventSystem\Contracts\DomainEvent;
 
 /**
  * Central event bus responsible for dispatching domain events either by class
@@ -66,11 +65,11 @@ class EventBus
      * Dispatches a concrete domain event instance using the underlying Laravel dispatcher,
      * allowing callers to work directly with event objects when the class is known.
      *
-     * @param DomainEvent $event The domain event instance to be dispatched.
+     * @param object $event The event instance to be dispatched.
      *
      * @return void
      */
-    public function dispatch(DomainEvent $event): void
+    public function dispatch(object $event): void
     {
         $this->dispatcher->dispatch($event);
     }
