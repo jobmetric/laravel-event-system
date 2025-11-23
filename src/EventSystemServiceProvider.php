@@ -46,8 +46,8 @@ class EventSystemServiceProvider extends PackageCoreServiceProvider
         /** @var EventRegistry $registry */
         $registry = $this->app->make('EventRegistry');
 
-        $registry->register('event_system.deleted', \JobMetric\EventSystem\Events\EventSystemDeletedEvent::class);
-        $registry->register('event_system.deleting', \JobMetric\EventSystem\Events\EventSystemDeletingEvent::class);
-        $registry->register('event_system.stored', \JobMetric\EventSystem\Events\EventSystemStoredEvent::class);
+        $registry->register(\JobMetric\EventSystem\Events\EventSystemDeletedEvent::class);
+        $registry->register(\JobMetric\EventSystem\Events\EventSystemDeletingEvent::class);
+        $registry->register(\JobMetric\EventSystem\Events\EventSystemStoredEvent::class);
     }
 }

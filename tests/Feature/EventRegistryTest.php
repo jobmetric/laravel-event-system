@@ -13,7 +13,7 @@ class EventRegistryTest extends BaseTestCase
     public function test_register_and_resolve_keys(): void
     {
         $registry = new EventRegistry();
-        $registry->register(Stubs\Events\DomainEventExample::key(), Stubs\Events\DomainEventExample::class);
+        $registry->register(Stubs\Events\DomainEventExample::class);
 
         $this->assertSame(Stubs\Events\DomainEventExample::class, $registry->forKey(Stubs\Events\DomainEventExample::key()));
 
@@ -27,7 +27,7 @@ class EventRegistryTest extends BaseTestCase
     public function test_register_stores_definition_and_allows_lookup(): void
     {
         $registry = new EventRegistry();
-        $registry->register(Stubs\Events\DomainEventExample::key(), Stubs\Events\DomainEventExample::class);
+        $registry->register(Stubs\Events\DomainEventExample::class);
 
         $definition = $registry->definitionForKey(Stubs\Events\DomainEventExample::key());
 
@@ -51,7 +51,7 @@ class EventRegistryTest extends BaseTestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('[JobMetric\\EventSystem\\Tests\\Stubs\\Events\\PlainEvent] must implement JobMetric\\EventSystem\\Contracts\\DomainEvent.');
 
-        $registry->register('invalid-event', Stubs\Events\PlainEvent::class);
+        $registry->register(Stubs\Events\PlainEvent::class);
     }
 
     public function test_returns_null_for_unregistered_keys_or_events(): void

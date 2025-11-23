@@ -30,26 +30,21 @@ class EventRegistry
     /**
      * Register a domain event with a given key and event class.
      *
-     * The provided key must match the static key returned by the DomainEvent implementation.
-     * During registration, both the class mapping and the DomainEventDefinition are stored
-     * for later lookup by key or for listing in user interfaces.
+     * The key is resolved from the DomainEvent implementation itself via its static key() method.
+     * During registration, both the class mapping and the DomainEventDefinition are stored for later lookup
+     * by key or for listing in user interfaces.
      *
-     * @param string $key                           The stable event key under which the event will be registered.
      * @param class-string<DomainEvent> $eventClass The concrete domain event class to register.
      *
      * @return void
      */
-    public function register(string $key, string $eventClass): void
+    public function register(string $eventClass): void
     {
         if (! is_subclass_of($eventClass, DomainEvent::class)) {
             throw new InvalidArgumentException("[$eventClass] must implement " . DomainEvent::class . '.');
         }
 
         $resolvedKey = $eventClass::key();
-
-        if ($key !== $resolvedKey) {
-            throw new InvalidArgumentException("Provided key [$key] does not match [$eventClass::key()] = [$resolvedKey].");
-        }
 
         $this->map[$resolvedKey] = $eventClass;
         $this->definitions[$resolvedKey] = $eventClass::definition();

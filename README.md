@@ -92,7 +92,7 @@ class UserRegistered implements DomainEvent
 }
 
 $registry = app(EventRegistry::class);
-$registry->register(UserRegistered::key(), UserRegistered::class);
+$registry->register(UserRegistered::class);
 
 // Later: dispatch by the stable key (use helper below if you prefer)
 EventBus::dispatchByKey(UserRegistered::key(), 7);

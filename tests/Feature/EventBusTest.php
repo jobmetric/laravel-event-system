@@ -15,7 +15,7 @@ class EventBusTest extends BaseTestCase
         Event::fake();
 
         $registry = new EventRegistry();
-        $registry->register(Stubs\Events\DomainEventExample::key(), Stubs\Events\DomainEventExample::class);
+        $registry->register(Stubs\Events\DomainEventExample::class);
 
         $this->app->instance(EventRegistry::class, $registry);
 
@@ -57,7 +57,7 @@ class EventBusTest extends BaseTestCase
     public function test_registry_key_for_returns_key_for_class_and_instance(): void
     {
         $registry = new EventRegistry();
-        $registry->register(Stubs\Events\DomainEventExample::key(), Stubs\Events\DomainEventExample::class);
+        $registry->register(Stubs\Events\DomainEventExample::class);
 
         $this->assertSame(Stubs\Events\DomainEventExample::key(), $registry->keyFor(Stubs\Events\DomainEventExample::class));
 
