@@ -26,7 +26,7 @@ if (! function_exists('addEventSystem')) {
         string $event,
         string $listener,
         int $priority = 0,
-        string $description = null,
+        ?string $description = null,
         bool $status = true
     ): Response {
         return EventSystem::store([
