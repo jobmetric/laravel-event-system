@@ -6,14 +6,14 @@ use JobMetric\EventSystem\Contracts\DomainEvent;
 use JobMetric\EventSystem\Models\Event;
 use JobMetric\EventSystem\Support\DomainEventDefinition;
 
-readonly class EventSystemStoredEvent implements DomainEvent
+class EventSystemStoredEvent implements DomainEvent
 {
     /**
      * Create a new event instance.
      */
     public function __construct(
-        public Event $event,
-        public array $data
+        public readonly Event $event,
+        public readonly array $data
     ) {
     }
 

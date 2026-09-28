@@ -6,13 +6,13 @@ use JobMetric\EventSystem\Contracts\DomainEvent;
 use JobMetric\EventSystem\Models\Event;
 use JobMetric\EventSystem\Support\DomainEventDefinition;
 
-readonly class EventSystemDeletedEvent implements DomainEvent
+class EventSystemDeletedEvent implements DomainEvent
 {
     /**
      * Create a new event instance.
      */
     public function __construct(
-        public Event $event,
+        public readonly Event $event,
     ) {
     }
 
