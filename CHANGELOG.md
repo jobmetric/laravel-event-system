@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.10.2
+
+- Unify typed EventRegistry/EventBus resolution with their named singleton bindings so registered definitions work consistently with dispatchByKey and facades.
+
 ## 2.10.1
 
 - Attach after-commit callbacks to the owning connection when multiple connections have open transactions; preserve Laravel testing transaction behavior.

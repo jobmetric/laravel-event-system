@@ -43,6 +43,9 @@ class EventSystemServiceProvider extends PackageCoreServiceProvider
      */
     public function afterRegisterPackage(): void
     {
+        $this->app->alias('EventRegistry', EventRegistry::class);
+        $this->app->alias('EventBus', EventBus::class);
+
         /** @var EventRegistry $registry */
         $registry = $this->app->make('EventRegistry');
 
