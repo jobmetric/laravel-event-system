@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Facade;
  *
  * @method static void dispatchByKey(string $key, mixed ...$payload)
  * @method static void dispatch(object $event)
+ * @method static void dispatchAfterCommit(\JobMetric\EventSystem\Contracts\DomainEvent $event, ?string $connection = null)
  */
 class EventBus extends Facade
 {

@@ -3,6 +3,7 @@
 namespace JobMetric\EventSystem\Support;
 
 use Illuminate\Contracts\Events\Dispatcher;
+use JobMetric\EventSystem\Contracts\DomainEvent;
 
 /**
  * Central event bus responsible for dispatching domain events either by class
@@ -72,5 +73,20 @@ class EventBus
     public function dispatch(object $event): void
     {
         $this->dispatcher->dispatch($event);
+    }
+
+    /**
+     * Publish a minimal domain outcome after the owning transaction commits.
+     *
+     * Listener failures are isolated; existing dispatch methods retain their semantics.
+     *
+     * @param DomainEvent $event
+     * @param string|null $connection
+     *
+     * @return void
+     */
+    public function dispatchAfterCommit(DomainEvent $event, ?string $connection = null): void
+    {
+        app(CommittedEventDispatcher::class)->dispatch($event, $connection);
     }
 }
