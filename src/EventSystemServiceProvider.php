@@ -29,7 +29,7 @@ class EventSystemServiceProvider extends PackageCoreServiceProvider
             ->hasTranslation()
             ->registerClass('EventSystem', EventSystem::class, RegisterClassTypeEnum::SINGLETON())
             ->registerClass('event', EventServiceProvider::class, RegisterClassTypeEnum::REGISTER())
-            ->registerClass('EventRegistry', EventRegistry::class, RegisterClassTypeEnum::SINGLETON())
+            ->registerClass('EventRegistry', static fn (): EventRegistry => new EventRegistry(), RegisterClassTypeEnum::SINGLETON())
             ->registerClass('EventBus', function ($app) {
                 return new EventBus($app->make(Dispatcher::class), $app->make(EventRegistry::class));
             }, RegisterClassTypeEnum::SINGLETON());

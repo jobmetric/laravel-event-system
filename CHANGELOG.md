@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.10.3
+
+- Construct the named registry through an explicit factory before aliasing typed access, preventing circular resolution. Supersedes the startup regression in 2.10.2.
+
 ## 2.10.2
 
 - Unify typed EventRegistry/EventBus resolution with their named singleton bindings so registered definitions work consistently with dispatchByKey and facades.

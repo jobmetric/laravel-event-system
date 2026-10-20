@@ -72,4 +72,9 @@ class EventBusTest extends BaseTestCase
 
         $this->assertNull($registry->keyFor(Stubs\Events\PlainEvent::class));
     }
+    public function test_typed_registry_and_bus_use_the_named_singletons(): void
+    {
+        $this->assertSame($this->app->make('EventRegistry'), $this->app->make(EventRegistry::class));
+        $this->assertSame($this->app->make('EventBus'), $this->app->make(EventBus::class));
+    }
 }
