@@ -3,7 +3,8 @@
 namespace JobMetric\EventSystem\Support;
 
 use Illuminate\Database\DatabaseManager;
-use Illuminate\Events\Dispatcher;
+use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Events\Dispatcher as LaravelDispatcher;
 use JobMetric\EventSystem\Contracts\DomainEvent;
 use Psr\Log\LoggerInterface;
 use Throwable;
@@ -64,6 +65,12 @@ class CommittedEventDispatcher
     private function deliver(DomainEvent $event): void
     {
         try {
+            if (! $this->events instanceof LaravelDispatcher) {
+                $this->events->dispatch($event);
+
+                return;
+            }
+
             $listeners = $this->events->getListeners($event::class);
         } catch (Throwable $exception) {
             $this->logFailure($event, $exception);

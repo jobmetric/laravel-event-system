@@ -7,6 +7,7 @@ use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\DatabaseTransactionsManager;
 use Illuminate\Database\SQLiteConnection;
 use Illuminate\Events\Dispatcher;
+use Illuminate\Support\Testing\Fakes\EventFake;
 use JobMetric\EventSystem\Contracts\DomainEvent;
 use JobMetric\EventSystem\Support\CommittedEventDispatcher;
 use JobMetric\EventSystem\Support\DomainEventDefinition;
@@ -113,6 +114,19 @@ class CommittedEventDispatcherTest extends TestCase
         self::assertSame([], $this->received);
         $this->connection->commit();
         self::assertSame([4], $this->received);
+    }
+
+    public function test_laravel_event_fake_records_committed_outcomes(): void
+    {
+        $fake = new EventFake($this->events);
+        $database = $this->createStub(DatabaseManager::class);
+        $database->method('connection')->willReturn($this->connection);
+        $bus = new CommittedEventDispatcher($database, $fake, $this->createStub(LoggerInterface::class));
+        $this->connection->beginTransaction();
+        $bus->dispatch(new CommittedOutcome(5));
+        $fake->assertNotDispatched(CommittedOutcome::class);
+        $this->connection->commit();
+        $fake->assertDispatchedTimes(CommittedOutcome::class, 1);
     }
 }
 
