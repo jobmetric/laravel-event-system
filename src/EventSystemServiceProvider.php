@@ -50,4 +50,18 @@ class EventSystemServiceProvider extends PackageCoreServiceProvider
         $registry->register(\JobMetric\EventSystem\Events\EventSystemDeletingEvent::class);
         $registry->register(\JobMetric\EventSystem\Events\EventSystemStoredEvent::class);
     }
+    /**
+     * Register committed business outcome definitions alongside legacy events.
+     *
+     * @return void
+     */
+    public function afterBootPackage(): void
+    {
+        if ($this->app->bound('EventRegistry')) {
+            $registry = $this->app->make('EventRegistry');
+            $registry->register(\JobMetric\EventSystem\Events\EventSystem\EventSystemStoreCommittedEvent::class);
+            $registry->register(\JobMetric\EventSystem\Events\EventSystem\EventSystemDeleteCommittedEvent::class);
+            $registry->register(\JobMetric\EventSystem\Events\EventSystem\EventSystemUpdateCommittedEvent::class);
+        }
+    }
 }

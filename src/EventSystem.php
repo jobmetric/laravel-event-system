@@ -111,6 +111,9 @@ class EventSystem
             $this->forgetCache();
 
             event(new EventSystemStoredEvent($event, $validated));
+        if ($event->exists) {
+            app(\JobMetric\EventSystem\Support\CommittedEventDispatcher::class)->dispatch(new \JobMetric\EventSystem\Events\EventSystem\EventSystemStoreCommittedEvent($event->getKey()), $event->getConnectionName());
+        }
 
             return Response::make(true, trans('event-system::base.messages.created'), EventSystemResource::make($event), 201);
         });
@@ -138,6 +141,9 @@ class EventSystem
             $event->delete();
 
             event(new EventSystemDeletedEvent($event));
+        if (! $event->exists) {
+            app(\JobMetric\EventSystem\Support\CommittedEventDispatcher::class)->dispatch(new \JobMetric\EventSystem\Events\EventSystem\EventSystemDeleteCommittedEvent($event->getKey()), $event->getConnectionName());
+        }
 
             $this->forgetCache();
 
@@ -162,6 +168,9 @@ class EventSystem
             $event->save();
 
             $this->forgetCache();
+            if ($event->wasChanged('status')) {
+                app(\JobMetric\EventSystem\Support\CommittedEventDispatcher::class)->dispatch(new \JobMetric\EventSystem\Events\EventSystem\EventSystemUpdateCommittedEvent($event->getKey()), $event->getConnectionName());
+            }
 
             return Response::make(true, trans('event-system::base.messages.change_status'), EventSystemResource::make($event));
         });
