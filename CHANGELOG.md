@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.10.1
+
+- Attach after-commit callbacks to the owning connection when multiple connections have open transactions; preserve Laravel testing transaction behavior.
+
 ## 2.10.0
 
 - Add registered immutable business outcome events with English and Persian discovery metadata.

@@ -49,7 +49,21 @@ class CommittedEventDispatcher
         };
 
         if ($database->transactionLevel() > 0) {
-            $database->afterCommit($deliver);
+            $container = \Illuminate\Container\Container::getInstance();
+            if ($container->bound('db.transactions')) {
+                $manager = $container->make('db.transactions');
+                $transaction = $manager->callbackApplicableTransactions()->last(
+                    static fn ($transaction): bool => $transaction->connection === $database->getName()
+                );
+                if ($transaction) {
+                    $transaction->addCallback($deliver);
+                } else {
+                    // Laravel's testing manager excludes the test's wrapping transaction.
+                    $deliver();
+                }
+            } else {
+                $database->afterCommit($deliver);
+            }
         } else {
             $deliver();
         }

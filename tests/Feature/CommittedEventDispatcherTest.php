@@ -116,6 +116,28 @@ class CommittedEventDispatcherTest extends TestCase
         self::assertSame([4], $this->received);
     }
 
+    public function test_another_connections_open_transaction_cannot_capture_the_callback(): void
+    {
+        $manager = new DatabaseTransactionsManager;
+        $this->connection->setTransactionManager($manager);
+        $other = new SQLiteConnection(new PDO('sqlite::memory:'), ':memory:', '', ['name' => 'other']);
+        $other->setTransactionManager($manager);
+        $container = new Container;
+        Container::setInstance($container);
+        $container->instance('db.transactions', $manager);
+        try {
+            $this->connection->beginTransaction();
+            $other->beginTransaction();
+            $this->bus->dispatch(new CommittedOutcome(6));
+            $other->commit();
+            self::assertSame([], $this->received);
+            $this->connection->commit();
+            self::assertSame([6], $this->received);
+        } finally {
+            Container::setInstance(null);
+        }
+    }
+
     public function test_laravel_event_fake_records_committed_outcomes(): void
     {
         $fake = new EventFake($this->events);
